@@ -45,6 +45,8 @@
   gap: 24px; /* Space between milestone cards */
   padding: 32px 0; /* Space above and below timeline */
   align-items: stretch; /* Stretch cards to same height */
+  scroll-snap-type: x mandatory; /* Enable horizontal scroll snap */
+  scroll-padding: 24px; /* Padding for snap alignment */
 }
 
 /* Milestone card styles */
@@ -57,15 +59,30 @@
   border-radius: 12px; /* Rounded corners */
   box-shadow: 0 2px 8px rgba(0,0,0,0.07); /* Soft shadow */
   padding: 80px 56px; /* Space inside card */
-  min-width: 220px; /* Minimum width for horizontal scroll */
+  min-width: 320px; /* Minimum width for horizontal scroll */
   max-width: 400px; /* Maximum width for card */
   font-family: Arial, Helvetica, sans-serif; /* Consistent font */
   position: relative; /* For hover details */
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.3s, transform 0.3s; /* Smooth transitions */
+  scroll-snap-align: start; /* Snap each card to start */
+  will-change: transform;
 }
 
 .milestone:hover {
-  box-shadow: 0 4px 16px rgba(0,113,197,0.15); /* Stronger shadow on hover */
+  box-shadow: 0 8px 32px rgba(0,113,197,0.18); /* Stronger shadow on hover */
+  transform: translateY(-10px) scale(1.04) rotate(-1deg); /* Subtle lift and tilt */
+}
+
+/* Add a class for the active (clicked) state */
+.milestone.active, .milestone:focus {
+  box-shadow: 0 8px 32px rgba(0,113,197,0.18);
+  transform: translateY(-10px) scale(1.04) rotate(-1deg);
+}
+.milestone.active .milestone-img-wrapper img, .milestone:focus .milestone-img-wrapper img {
+  transform: scale(1.05) rotate(1deg);
+}
+.milestone.active .milestone-details, .milestone:focus .milestone-details {
+  display: block;
 }
 
 /* Hidden details, shown on hover */
@@ -82,12 +99,13 @@
 
 /* Milestone image wrapper styles */
 .milestone-img-wrapper {
-  flex: 1 1 auto; /* Take up all available space */
+  flex: 2 1 200px; /* Take up more space for bigger images */
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
-  min-height: 120px; /* Optional: set a minimum height */
+  min-height: 180px; /* Increase minimum height for bigger images */
+  max-height: 260px; /* Optional: set a max height */
 }
 
 /* Milestone image styles */
@@ -96,6 +114,12 @@
   height: 100%;
   object-fit: cover; /* Fill the area, cropping if needed */
   border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,113,197,0.10); /* Subtle image shadow */
+  transition: transform 0.3s;
+}
+
+.milestone:hover .milestone-img-wrapper img {
+  transform: scale(1.05) rotate(1deg); /* Slight zoom and tilt on image */
 }
 
 /* Responsive: stack vertically on small screens */
@@ -105,11 +129,16 @@
     overflow-x: visible; /* No horizontal scroll */
     gap: 20px;
     align-items: center; /* Center cards */
+    scroll-snap-type: none; /* Disable snap on mobile */
   }
   .milestone {
     min-width: 0;
     width: 90%; /* Make cards fill most of the width */
     max-width: 400px;
     flex-direction: column; /* Stack image and text vertically */
+  }
+  .milestone-img-wrapper {
+    min-height: 140px; /* Slightly smaller on mobile */
+    max-height: 200px;
   }
 }
